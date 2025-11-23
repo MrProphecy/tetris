@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris Elite - Juego Online</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="twinkling"></div>
+
+    <div class="container">
+        <header>
+            <h1 class="title">
+                <span class="title-glow">TETRIS</span>
+                <span class="title-elite">ELITE</span>
+            </h1>
+            <div class="subtitle">Desafía tus límites</div>
+        </header>
+
+        <div class="game-container">
+            <div class="stats-panel left-panel">
+                <div class="stat-box">
+                    <div class="stat-label">PUNTUACIÓN</div>
+                    <div class="stat-value score-value" id="score">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">LÍNEAS</div>
+                    <div class="stat-value" id="lines">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">NIVEL</div>
+                    <div class="stat-value level-value" id="level">1</div>
+                </div>
+                <div class="stat-box next-piece-box">
+                    <div class="stat-label">SIGUIENTE</div>
+                    <canvas id="nextCanvas" width="120" height="120"></canvas>
+                </div>
+            </div>
+
+            <div class="game-board">
+                <canvas id="gameCanvas" width="300" height="600"></canvas>
+                <div class="game-overlay" id="gameOverlay">
+                    <div class="overlay-content">
+                        <h2 class="overlay-title">TETRIS ELITE</h2>
+                        <p class="overlay-text">Presiona ESPACIO para comenzar</p>
+                        <div class="controls-info">
+                            <div class="control-item">
+                                <span class="key">←→</span>
+                                <span class="action">Mover</span>
+                            </div>
+                            <div class="control-item">
+                                <span class="key">↑</span>
+                                <span class="action">Rotar</span>
+                            </div>
+                            <div class="control-item">
+                                <span class="key">↓</span>
+                                <span class="action">Bajar rápido</span>
+                            </div>
+                            <div class="control-item">
+                                <span class="key">ESPACIO</span>
+                                <span class="action">Caída instantánea</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-overlay hidden" id="pauseOverlay">
+                    <div class="overlay-content">
+                        <h2 class="overlay-title">PAUSA</h2>
+                        <p class="overlay-text">Presiona P para continuar</p>
+                    </div>
+                </div>
+                <div class="game-overlay hidden" id="gameOverOverlay">
+                    <div class="overlay-content">
+                        <h2 class="overlay-title game-over-title">GAME OVER</h2>
+                        <div class="final-stats">
+                            <div class="final-stat">
+                                <div class="final-stat-label">Puntuación Final</div>
+                                <div class="final-stat-value" id="finalScore">0</div>
+                            </div>
+                            <div class="final-stat">
+                                <div class="final-stat-label">Nivel Alcanzado</div>
+                                <div class="final-stat-value" id="finalLevel">1</div>
+                            </div>
+                        </div>
+                        <p class="overlay-text">Presiona ESPACIO para jugar de nuevo</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-panel right-panel">
+                <div class="stat-box">
+                    <div class="stat-label">VELOCIDAD</div>
+                    <div class="speed-bar-container">
+                        <div class="speed-bar" id="speedBar"></div>
+                    </div>
+                    <div class="stat-value-small" id="speedText">Normal</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">RÉCORD</div>
+                    <div class="stat-value high-score-value" id="highScore">0</div>
+                </div>
+                <div class="info-box">
+                    <h3 class="info-title">SISTEMA DE PUNTOS</h3>
+                    <div class="points-info">
+                        <div class="point-item">1 línea: <span class="point-value">100</span></div>
+                        <div class="point-item">2 líneas: <span class="point-value">300</span></div>
+                        <div class="point-item">3 líneas: <span class="point-value">500</span></div>
+                        <div class="point-item">4 líneas: <span class="point-value">800</span></div>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <div class="stat-label">DIFICULTAD</div>
+                    <div class="difficulty-indicator">
+                        <div class="difficulty-bar" id="difficultyBar"></div>
+                    </div>
+                    <div class="difficulty-text" id="difficultyText">Principiante</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-content">
+                <a href="https://www.invernaliacafe.com/" target="_blank" class="cafe-link">
+                    <span class="cafe-icon">☕</span>
+                    Visita Invernalia Café
+                </a>
+                <div class="footer-text">
+                    Creado con <span class="heart">❤️</span> por Claude
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <canvas id="particleCanvas"></canvas>
+    <script src="game.js"></script>
+</body>
+</html>
