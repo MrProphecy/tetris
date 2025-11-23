@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Visual - Instalación Tetris Elite</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .alert {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .alert-info {
+            background: #cce5ff;
+            border-left: 5px solid #004085;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border-left: 5px solid #856404;
+        }
+
+        .alert h3 {
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .method {
+            margin: 40px 0;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #667eea;
+        }
+
+        .method-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: -30px -30px 20px -30px;
+        }
+
+        .method-header h2 {
+            font-size: 1.8rem;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .easy { background: #28a745; color: white; }
+        .medium { background: #ffc107; color: #333; }
+        .hard { background: #dc3545; color: white; }
+
+        .steps {
+            counter-reset: step-counter;
+        }
+
+        .step {
+            position: relative;
+            padding-left: 60px;
+            margin: 25px 0;
+            padding-bottom: 25px;
+            border-left: 3px solid #667eea;
+        }
+
+        .step::before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: -20px;
+            top: 0;
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .step h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .code-box {
+            background: #2d3748;
+            color: #68d391;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        .url-example {
+            background: #e7f5ff;
+            border: 2px dashed #0066cc;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            color: #0066cc;
+            font-size: 1.1rem;
+            margin: 15px 0;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-left: 4px solid #28a745;
+            border-radius: 3px;
+        }
+
+        .checklist li::before {
+            content: "✅ ";
+            margin-right: 10px;
+        }
+
+        .cross-list li {
+            border-left-color: #dc3545;
+        }
+
+        .cross-list li::before {
+            content: "❌ ";
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-card {
+            padding: 20px;
+            border-radius: 10px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            transition: transform 0.3s;
+        }
+
+        .comparison-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .comparison-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            background: #667eea;
+            color: white;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
+        .print-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #667eea;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+        }
+
+        .print-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+            .print-button {
+                display: none;
+            }
+            .method {
+                page-break-inside: avoid;
+            }
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .files-list {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .files-list code {
+            background: #2d3748;
+            color: #68d391;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .tip {
+            background: #fff9e6;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .tip::before {
+            content: "💡 TIP: ";
+            font-weight: bold;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 GUÍA DE INSTALACIÓN</h1>
+            <div class="subtitle">Tetris Elite - Desde Cero</div>
+        </div>
+
+        <div class="alert alert-info">
+            <h3>❓ ¿Necesito una Máquina Virtual?</h3>
+            <h2 style="color: #dc3545; font-size: 3rem; text-align: center; margin: 20px 0;">¡NO!</h2>
+            <p style="font-size: 1.1rem; text-align: center;">
+                Este juego funciona directamente en el navegador web.<br>
+                <strong>No necesitas instalar nada complejo.</strong>
+            </p>
+        </div>
+
+        <div class="alert">
+            <h3>✅ Lo que NO necesitas:</h3>
+            <ul class="cross-list">
+                <li>Máquina virtual (VirtualBox, VMware, etc.)</li>
+                <li>Servidor dedicado o hosting caro</li>
+                <li>Conocimientos avanzados de programación</li>
+                <li>Instalar software complejo</li>
+                <li>Pagar por hosting</li>
+            </ul>
+        </div>
+
+        <div class="comparison">
+            <div class="comparison-card">
+                <h3>GitHub Pages</h3>
+                <span class="difficulty easy">Fácil</span>
+                <ul class="checklist" style="margin-top: 15px;">
+                    <li>100% Gratis</li>
+                    <li>Sin límite de tiempo</li>
+                    <li>URL profesional</li>
+                    <li>Fácil de actualizar</li>
+                </ul>
+                <div class="tip">Mejor opción para principiantes</div>
+            </div>
+
+            <div class="comparison-card">
+                <h3>Vercel</h3>
+                <span class="difficulty easy">Muy Fácil</span>
+                <ul class="checklist" style="margin-top: 15px;">
+                    <li>Gratis</li>
+                    <li>Despliegue en 30 seg</li>
+                    <li>Auto-actualización</li>
+                    <li>Mejor rendimiento</li>
+                </ul>
+                <div class="tip">Más rápido para desplegar</div>
+            </div>
+
+            <div class="comparison-card">
+                <h3>Netlify Drop</h3>
+                <span class="difficulty easy">Super Fácil</span>
+                <ul class="checklist" style="margin-top: 15px;">
+                    <li>Gratis</li>
+                    <li>Arrastar y soltar</li>
+                    <li>10 segundos</li>
+                    <li>Sin registro Git</li>
+                </ul>
+                <div class="tip">El más simple de todos</div>
+            </div>
+        </div>
+
+        <!-- MÉTODO 1: GITHUB PAGES -->
+        <div class="method">
+            <div class="method-header">
+                <h2>📘 MÉTODO 1: GitHub Pages</h2>
+                <span class="difficulty easy">Recomendado para principiantes</span>
+            </div>
+
+            <div class="steps">
+                <div class="step">
+                    <h4>Crear cuenta en GitHub</h4>
+                    <p>Ve a <span class="highlight">github.com</span> y haz clic en "Sign up"</p>
+                    <p>Completa el registro con tu email y crea una contraseña</p>
+                    <div class="code-box">https://github.com/signup</div>
+                </div>
+
+                <div class="step">
+                    <h4>Crear un nuevo repositorio</h4>
+                    <p>Una vez dentro de GitHub:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Haz clic en el botón <span class="highlight">+ (más)</span> arriba a la derecha</li>
+                        <li>Selecciona <span class="highlight">"New repository"</span></li>
+                        <li>Nombre: <code style="background: #e7f5ff; padding: 3px 8px;">tetris</code></li>
+                        <li>Marca como <span class="highlight">"Public"</span></li>
+                        <li>Haz clic en <span class="highlight">"Create repository"</span></li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h4>Subir los archivos del juego</h4>
+                    <p>En la página del nuevo repositorio:</p>
+                    <div class="files-list">
+                        <p>Debes subir estos 3 archivos:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><code>index.html</code></li>
+                            <li><code>styles.css</code></li>
+                            <li><code>game.js</code></li>
+                        </ul>
+                    </div>
+                    <p>Haz clic en <span class="highlight">"uploading an existing file"</span></p>
+                    <p>Arrastra los 3 archivos a la ventana del navegador</p>
+                    <p>Haz clic en <span class="highlight">"Commit changes"</span></p>
+                </div>
+
+                <div class="step">
+                    <h4>Activar GitHub Pages</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Ve a <span class="highlight">Settings</span> (Configuración)</li>
+                        <li>En el menú lateral, busca <span class="highlight">Pages</span></li>
+                        <li>En "Source", selecciona <span class="highlight">main</span></li>
+                        <li>Haz clic en <span class="highlight">Save</span></li>
+                        <li>Espera 2-3 minutos</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h4>¡Tu juego está online!</h4>
+                    <p>La URL de tu juego será:</p>
+                    <div class="url-example">
+                        https://TU-USUARIO.github.io/tetris/
+                    </div>
+                    <p><strong>Ejemplo:</strong> Si tu usuario es "juanperez":</p>
+                    <div class="url-example">
+                        https://juanperez.github.io/tetris/
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÉTODO 2: VERCEL -->
+        <div class="method">
+            <div class="method-header">
+                <h2>⚡ MÉTODO 2: Vercel</h2>
+                <span class="difficulty easy">Super rápido - 30 segundos</span>
+            </div>
+
+            <div class="steps">
+                <div class="step">
+                    <h4>Crear cuenta en Vercel</h4>
+                    <div class="code-box">https://vercel.com</div>
+                    <p>Haz clic en <span class="highlight">"Sign Up"</span></p>
+                    <p>Regístrate con tu cuenta de <span class="highlight">GitHub</span> (más fácil)</p>
+                </div>
+
+                <div class="step">
+                    <h4>Importar tu proyecto</h4>
+                    <p>Haz clic en <span class="highlight">"Add New..."</span> → <span class="highlight">"Project"</span></p>
+                    <p>Selecciona <span class="highlight">"Import Git Repository"</span></p>
+                    <p>Elige tu repositorio <span class="highlight">"tetris"</span></p>
+                </div>
+
+                <div class="step">
+                    <h4>Desplegar</h4>
+                    <p>Haz clic en <span class="highlight">"Deploy"</span></p>
+                    <p>Espera 30 segundos... ¡y listo!</p>
+                    <div class="url-example">
+                        https://tetris-tu-nombre.vercel.app
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÉTODO 3: NETLIFY -->
+        <div class="method">
+            <div class="method-header">
+                <h2>🚀 MÉTODO 3: Netlify Drop</h2>
+                <span class="difficulty easy">El más simple - 10 segundos</span>
+            </div>
+
+            <div class="steps">
+                <div class="step">
+                    <h4>Preparar carpeta</h4>
+                    <p>Crea una carpeta llamada <span class="highlight">"tetris"</span> en tu computadora</p>
+                    <div class="files-list">
+                        <p>Guarda dentro estos archivos:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><code>index.html</code></li>
+                            <li><code>styles.css</code></li>
+                            <li><code>game.js</code></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>Arrastra y suelta</h4>
+                    <div class="code-box">https://app.netlify.com/drop</div>
+                    <p>Arrastra la carpeta <span class="highlight">"tetris"</span> completa a la ventana</p>
+                    <p>Espera 10 segundos... ¡listo!</p>
+                    <div class="url-example">
+                        https://random-name-123456.netlify.app
+                    </div>
+                    <div class="tip">
+                        Puedes cambiar el nombre de la URL después en la configuración
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INTEGRACIÓN CON INVERNALIA CAFÉ -->
+        <div class="method">
+            <div class="method-header">
+                <h2>🔗 INTEGRACIÓN CON INVERNALIA CAFÉ</h2>
+            </div>
+
+            <p style="margin: 20px 0; font-size: 1.1rem;">
+                Una vez que tengas tu juego online, añade este botón a tu sitio web:
+            </p>
+
+            <div class="step" style="border: none; padding-left: 20px;">
+                <h4>Código HTML:</h4>
+                <div class="code-box">
+&lt;a href="TU-URL-DEL-JUEGO"
+   class="btn-tetris"
+   target="_blank"&gt;
+   🎮 Jugar Tetris Elite
+&lt;/a&gt;
+                </div>
+            </div>
+
+            <div class="step" style="border: none; padding-left: 20px;">
+                <h4>Código CSS (para el estilo):</h4>
+                <div class="code-box">
+.btn-tetris {
+    padding: 15px 30px;
+    background: linear-gradient(45deg, #00f5ff, #ff00ff);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: bold;
+    transition: all 0.3s;
+    box-shadow: 0 5px 25px rgba(0, 245, 255, 0.4);
+}
+
+.btn-tetris:hover {
+    transform: translateY(-3px) scale(1.05);
+}
+                </div>
+            </div>
+        </div>
+
+        <!-- RESUMEN -->
+        <div class="alert">
+            <h3>📝 RESUMEN ULTRA-RÁPIDO</h3>
+            <ol style="margin-left: 20px; margin-top: 15px; font-size: 1.1rem;">
+                <li style="margin: 10px 0;">Crea cuenta en <strong>GitHub</strong></li>
+                <li style="margin: 10px 0;">Crea repositorio llamado <strong>"tetris"</strong></li>
+                <li style="margin: 10px 0;">Sube los 3 archivos (index.html, styles.css, game.js)</li>
+                <li style="margin: 10px 0;">Activa <strong>GitHub Pages</strong> en Settings → Pages</li>
+                <li style="margin: 10px 0;">Espera 2 minutos y visita tu URL</li>
+            </ol>
+            <div class="url-example" style="margin-top: 20px;">
+                https://TU-USUARIO.github.io/tetris/
+            </div>
+        </div>
+
+        <div class="alert alert-info">
+            <h3>🎉 ¡ESO ES TODO!</h3>
+            <p style="font-size: 1.2rem; text-align: center; margin-top: 15px;">
+                <strong>Sin máquina virtual. Sin instalaciones complejas. 100% Gratis.</strong>
+            </p>
+        </div>
+
+        <div style="margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 10px; text-align: center;">
+            <h3 style="color: #667eea; margin-bottom: 15px;">¿Necesitas ayuda?</h3>
+            <p>Si tienes problemas con algún paso, verifica que:</p>
+            <ul class="checklist" style="margin-top: 15px;">
+                <li>Los 3 archivos están en la misma carpeta</li>
+                <li>El repositorio es "Public" en GitHub</li>
+                <li>Has esperado al menos 3 minutos después de activar Pages</li>
+                <li>La URL está escrita correctamente</li>
+            </ul>
+        </div>
+    </div>
+
+    <button class="print-button" onclick="window.print()">
+        🖨️ Imprimir Guía
+    </button>
+
+    <script>
+        // Mensaje de bienvenida en consola
+        console.log('%c¡Guía de Instalación Tetris Elite!', 'color: #667eea; font-size: 24px; font-weight: bold;');
+        console.log('%cSigue los pasos y tendrás tu juego online en minutos', 'color: #666; font-size: 14px;');
+    </script>
+</body>
+</html>
