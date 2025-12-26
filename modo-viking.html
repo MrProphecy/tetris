@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MODO VIKING - Planificador Integral</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .config-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .config-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .config-item label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .config-item input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .config-item input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-success {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .day-card {
+            background: white;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .day-header {
+            text-align: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .day-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .day-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .modes-checkboxes {
+            margin: 10px 0;
+        }
+
+        .mode-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+
+        .mode-item:hover {
+            background: #f8f9fa;
+        }
+
+        .mode-item input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .mode-item label {
+            cursor: pointer;
+            font-size: 0.85rem;
+            user-select: none;
+        }
+
+        .mode-focus { color: #3498db; }
+        .mode-gym { color: #2ecc71; }
+        .mode-secreto { color: #e74c3c; }
+        .mode-panza { color: #f39c12; }
+        .mode-descanso { color: #95a5a6; }
+
+        .day-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .day-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .day-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-notes {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-view {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            opacity: 0.7;
+        }
+
+        .timeline {
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .timeline-time {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #2c3e50;
+            min-width: 80px;
+        }
+
+        .timeline-content {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .timeline-content h4 {
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        .timeline-content ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .timeline-content li {
+            margin: 5px 0;
+        }
+
+        .alert-box {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border-color: #f39c12;
+            color: #856404;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border-color: #3498db;
+            color: #0c5460;
+        }
+
+        .routine-selector {
+            margin: 20px 0;
+        }
+
+        .routine-selector select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .routine-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .exercise-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #2ecc71;
+        }
+
+        .exercise-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .exercise-details {
+            color: #555;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .notes-area {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #ecf0f1;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .save-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2ecc71;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: none;
+            animation: slideInRight 0.3s;
+            z-index: 2000;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .mode-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin: 3px;
+            font-weight: 600;
+        }
+
+        .badge-focus { background: #3498db; color: white; }
+        .badge-gym { background: #2ecc71; color: white; }
+        .badge-secreto { background: #e74c3c; color: white; }
+        .badge-panza { background: #f39c12; color: white; }
+        .badge-descanso { background: #95a5a6; color: white; }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 20px 0 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .supplement-list {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .calendar-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .calendar-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .config-section {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        .week-separator {
+            grid-column: 1 / -1;
+            background: linear-gradient(90deg, transparent, #3498db, transparent);
+            height: 2px;
+            margin: 10px 0;
+        }
+
+        .week-label {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin: 10px 0;
+            padding: 10px;
+            background: #ecf0f1;
+            border-radius: 8px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .actions, .day-actions {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚔️ MODO VIKING ⚔️</h1>
+        <p class="subtitle">Planificador Integral de Rendimiento</p>
+
+        <!-- Configuración -->
+        <div class="config-section">
+            <div class="config-item">
+                <label>🌅 Hora Despertar:</label>
+                <input type="time" id="wakeTime" value="08:00">
+            </div>
+            <div class="config-item">
+                <label>💪 Gym Lun-Vie:</label>
+                <input type="time" id="gymWeekday" value="17:30">
+            </div>
+            <div class="config-item">
+                <label>💪 Gym Sáb-Dom:</label>
+                <input type="time" id="gymWeekend" value="10:00">
+            </div>
+        </div>
+
+        <!-- Acciones Principales -->
+        <div class="actions">
+            <button class="btn btn-success" onclick="saveAll()">💾 GUARDAR CAMBIOS</button>
+            <button class="btn btn-primary" onclick="generatePDF()">📥 GENERAR PDF</button>
+            <button class="btn btn-danger" onclick="resetAll()">🔄 RESETEAR TODO</button>
+        </div>
+
+        <!-- Calendario -->
+        <div id="calendar" class="calendar-grid"></div>
+    </div>
+
+    <!-- Modal Ver Plan -->
+    <div id="planModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('planModal')">&times;</span>
+                <h2 id="planModalTitle">Plan del Día</h2>
+                <div id="planModalBadges"></div>
+            </div>
+            <div class="modal-body" id="planModalBody">
+                <!-- Contenido dinámico -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="printDay()">📄 Imprimir Día</button>
+                <button class="btn btn-success" onclick="saveDayPlan()">💾 Guardar</button>
+                <button class="btn" onclick="closeModal('planModal')">⬅️ Volver</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Notas -->
+    <div id="notesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('notesModal')">&times;</span>
+                <h2 id="notesModalTitle">Notas del Día</h2>
+            </div>
+            <div class="modal-body">
+                <textarea id="notesTextarea" class="notes-area" placeholder="Escribe tus notas personalizadas aquí..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" onclick="saveNotes()">💾 Guardar Notas</button>
+                <button class="btn" onclick="closeModal('notesModal')">⬅️ Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensaje de guardado -->
+    <div id="saveMessage" class="save-message">✅ Guardado correctamente</div>
+
+    <script>
+        // Variables globales
+        let currentDate = new Date();
+        let calendarData = {};
+        let currentDayKey = null;
+
+        // Modos disponibles
+        const MODES = {
+            focus: { name: 'MODO FOCUS', icon: '🔵', class: 'focus' },
+            gym: { name: 'MODO GYM', icon: '🟢', class: 'gym' },
+            secreto: { name: 'MODO SECRETO', icon: '🔴', class: 'secreto' },
+            panza: { name: 'MODO PANZA CERO', icon: '🟡', class: 'panza' },
+            descanso: { name: 'MODO DESCANSO', icon: '⚪', class: 'descanso' }
+        };
+
+        // Rutinas de gym
+        const GYM_ROUTINES = {
+            torsoA: {
+                name: 'TORSO A (Pecho + Hombro + Tríceps)',
+                exercises: [
+                    { name: 'Press pecho máquina', details: '4×10-12 (RIR 2-3, descanso 90-120s)', warning: '⚠️ Calentamiento hombro derecho obligatorio' },
+                    { name: 'Press inclinado', details: '3×10-12 (RIR 2-3, descanso 90-120s)' },
+                    { name: 'Aperturas', details: '3×12-15 (RIR 2-3, descanso 60-90s)' },
+                    { name: 'Press hombro máquina', details: '3×10-12 (RIR 2-3, descanso 90-120s)' },
+                    { name: 'Elevaciones laterales', details: '3×12-15 (RIR 3-4, descanso 60s)' },
+                    { name: 'Tríceps polea', details: '3×12-15 (RIR 2-3, descanso 60-90s)' }
+                ],
+                duration: '60-75 min'
+            },
+            torsoB: {
+                name: 'TORSO B (Espalda + Bíceps)',
+                exercises: [
+                    { name: 'Jalón pecho agarre ancho', details: '4×10-12 (RIR 2-3, descanso 90-120s)' },
+                    { name: 'Remo máquina', details: '4×10-12 (RIR 2-3, descanso 90-120s)' },
+                    { name: 'Jalón agarre neutro', details: '3×12-15 (RIR 2-3, descanso 60-90s)' },
+                    { name: 'Pull-over máquina', details: '3×12-15 (RIR 2-3, descanso 60-90s)' },
+                    { name: 'Curl bíceps polea', details: '3×12-15 (RIR 2-3, descanso 60s)' },
+                    { name: 'Curl martillo', details: '3×12-15 (RIR 2-3, descanso 60s)' }
+                ],
+                duration: '60-75 min'
+            },
+            piernaA: {
+                name: 'PIERNA A (Cuádriceps + Abductores)',
+                exercises: [
+                    { name: 'Prensa 45°', details: '4×10-12 (RIR 2-3, descanso 90-120s)', warning: '⚠️ NO rango completo rodilla izquierda' },
+                    { name: 'Extensiones cuádriceps', details: '3×12-15 (RIR 2-3, descanso 60-90s)' },
+                    { name: 'Zancadas máquina', details: '3×10-12 cada pierna (RIR 3, descanso 90s)' },
+                    { name: 'Abductores máquina', details: '3×15-20 (RIR 3-4, descanso 60s)' },
+                    { name: 'Aductores máquina', details: '3×15-20 (RIR 3-4, descanso 60s)' },
+                    { name: 'Gemelos prensa', details: '4×15-20 (RIR 2-3, descanso 60s)' }
+                ],
+                duration: '60-75 min'
+            },
+            piernaB: {
+                name: 'PIERNA B (Femoral + Glúteo)',
+                exercises: [
+                    { name: 'Peso muerto rumano máquina', details: '4×10-12 (RIR 2-3, descanso 90-120s)', warning: '⚠️ Cuidado lumbar L5-L6' },
+                    { name: 'Curl femoral tumbado', details: '4×12-15 (RIR 2-3, descanso 60-90s)' },
+                    { name: 'Hip thrust máquina', details: '3×12-15 (RIR 2-3, descanso 90s)' },
+                    { name: 'Patada glúteo máquina', details: '3×15-20 cada pierna (RIR 3, descanso 60s)' },
+                    { name: 'Gemelos sentado', details: '4×15-20 (RIR 2-3, descanso 60s)' }
+                ],
+                duration: '55-70 min'
+            },
+            fullBody: {
+                name: 'FULL BODY',
+                exercises: [
+                    { name: 'Press pecho', details: '3×10-12' },
+                    { name: 'Remo máquina', details: '3×10-12' },
+                    { name: 'Prensa piernas', details: '3×12-15' },
+                    { name: 'Press hombro', details: '3×10-12' },
+                    { name: 'Curl femoral', details: '3×12-15' },
+                    { name: 'Tríceps + Bíceps', details: '2×12-15 cada uno' }
+                ],
+                duration: '60 min'
+            },
+            descansoActivo: {
+                name: 'DESCANSO ACTIVO',
+                exercises: [
+                    { name: 'Cardio LISS', details: '30-40 min' },
+                    { name: 'Caminata', details: '10,000 pasos' },
+                    { name: 'Estiramientos', details: '15-20 min' },
+                    { name: 'Movilidad', details: '10-15 min' }
+                ],
+                duration: '60-90 min'
+            }
+        };
+
+        // Inicialización
+        window.onload = function() {
+            loadFromLocalStorage();
+            generateCalendar();
+        };
+
+        // Generar calendario de 3 semanas
+        function generateCalendar() {
+            const calendar = document.getElementById('calendar');
+            calendar.innerHTML = '';
+
+            const startDate = new Date(currentDate);
+            const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+
+            for (let week = 0; week < 3; week++) {
+                // Añadir etiqueta de semana
+                const weekLabel = document.createElement('div');
+                weekLabel.className = 'week-label';
+                weekLabel.textContent = `SEMANA ${week + 1}`;
+                calendar.appendChild(weekLabel);
+
+                for (let day = 0; day < 7; day++) {
+                    const currentDay = new Date(startDate);
+                    currentDay.setDate(startDate.getDate() + (week * 7) + day);
+
+                    const dayKey = currentDay.toISOString().split('T')[0];
+
+                    // Inicializar datos del día si no existen
+                    if (!calendarData[dayKey]) {
+                        calendarData[dayKey] = {
+                            modes: {},
+                            routine: '',
+                            notes: '',
+                            secretoDayD: false
+                        };
+                    }
+
+                    const dayCard = createDayCard(currentDay, dayKey);
+                    calendar.appendChild(dayCard);
+                }
+            }
+        }
+
+        // Crear tarjeta de día
+        function createDayCard(date, dayKey) {
+            const card = document.createElement('div');
+            card.className = 'day-card';
+
+            const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+            const dayName = days[date.getDay()];
+            const dayNumber = date.getDate();
+            const month = date.toLocaleDateString('es-ES', { month: 'short' });
+
+            card.innerHTML = `
+                <div class="day-header">
+                    <div class="day-name">${dayName} ${dayNumber} ${month}</div>
+                </div>
+                <div class="modes-checkboxes">
+                    ${Object.keys(MODES).map(mode => `
+                        <div class="mode-item">
+                            <input type="checkbox"
+                                   id="${dayKey}-${mode}"
+                                   ${calendarData[dayKey].modes[mode] ? 'checked' : ''}
+                                   onchange="toggleMode('${dayKey}', '${mode}')">
+                            <label for="${dayKey}-${mode}" class="mode-${MODES[mode].class}">
+                                ${MODES[mode].icon} ${MODES[mode].name}
+                            </label>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="day-actions">
+                    <button class="day-btn btn-notes" onclick="openNotes('${dayKey}', '${dayName} ${dayNumber}')">📝 Notas</button>
+                    <button class="day-btn btn-view" onclick="viewDayPlan('${dayKey}', '${dayName} ${dayNumber} ${month}')">👁️ Ver Plan</button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Toggle modo
+        function toggleMode(dayKey, mode) {
+            calendarData[dayKey].modes[mode] = !calendarData[dayKey].modes[mode];
+
+            // Si activa Modo Secreto, preguntar si es Día D
+            if (mode === 'secreto' && calendarData[dayKey].modes[mode]) {
+                if (confirm('¿Este es el DÍA D del Modo Secreto?\n\nSe calculará automáticamente el protocolo de días -8 a D.')) {
+                    calendarData[dayKey].secretoDayD = true;
+                    calculateSecretoProtocol(dayKey);
+                }
+            }
+        }
+
+        // Calcular protocolo Modo Secreto
+        function calculateSecretoProtocol(dayDKey) {
+            const dayD = new Date(dayDKey);
+
+            for (let i = 8; i >= 1; i--) {
+                const prevDay = new Date(dayD);
+                prevDay.setDate(dayD.getDate() - i);
+                const prevDayKey = prevDay.toISOString().split('T')[0];
+
+                if (!calendarData[prevDayKey]) {
+                    calendarData[prevDayKey] = { modes: {}, routine: '', notes: '', secretoDayD: false };
+                }
+
+                calendarData[prevDayKey].modes.secreto = true;
+                calendarData[prevDayKey].secretoDay = -i;
+            }
+
+            calendarData[dayDKey].secretoDay = 0;
+            generateCalendar();
+            showSaveMessage();
+        }
+
+        // Ver plan del día
+        function viewDayPlan(dayKey, dateStr) {
+            currentDayKey = dayKey;
+            const dayData = calendarData[dayKey];
+            const modal = document.getElementById('planModal');
+
+            // Título
+            document.getElementById('planModalTitle').innerHTML = `📅 Plan Detallado - ${dateStr}`;
+
+            // Badges de modos activos
+            const badges = Object.keys(dayData.modes)
+                .filter(mode => dayData.modes[mode])
+                .map(mode => `<span class="mode-badge badge-${MODES[mode].class}">${MODES[mode].icon} ${MODES[mode].name}</span>`)
+                .join('');
+            document.getElementById('planModalBadges').innerHTML = badges || '<span style="color: #ecf0f1;">Sin modos activos</span>';
+
+            // Generar contenido
+            let content = generateDayPlan(dayKey, dayData);
+            document.getElementById('planModalBody').innerHTML = content;
+
+            modal.style.display = 'block';
+        }
+
+        // Generar plan del día
+        function generateDayPlan(dayKey, dayData) {
+            const date = new Date(dayKey);
+            const dayOfWeek = date.getDay();
+            const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+            let html = '';
+
+            // Alertas
+            html += generateAlerts(dayKey, dayData, dayOfWeek);
+
+            // Timeline
+            html += '<div class="section-title">⏰ Timeline del Día</div>';
+            html += '<div class="timeline">';
+            html += generateTimeline(dayData, isWeekend);
+            html += '</div>';
+
+            // Selector de rutina si hay Modo Gym activo
+            if (dayData.modes.gym) {
+                html += generateGymSection(dayKey, dayData);
+            }
+
+            // Notas personalizadas
+            html += `
+                <div class="section-title">📝 Notas Personalizadas</div>
+                <textarea id="dayNotes" class="notes-area" placeholder="Escribe tus notas aquí...">${dayData.notes || ''}</textarea>
+            `;
+
+            return html;
+        }
+
+        // Generar alertas
+        function generateAlerts(dayKey, dayData, dayOfWeek) {
+            let alerts = [];
+            const date = new Date(dayKey);
+
+            // Lunes + Pecho
+            if (dayOfWeek === 1 && dayData.routine === 'torsoA') {
+                alerts.push({
+                    type: 'warning',
+                    text: '⚠️ Lunes = Saturación máximas pecho. Considera llegar 17:15 o cambiar a Torso B (Espalda)'
+                });
+            }
+
+            // 5+ días gym consecutivos
+            let consecutiveGym = 0;
+            for (let i = 0; i < 5; i++) {
+                const checkDate = new Date(date);
+                checkDate.setDate(date.getDate() - i);
+                const checkKey = checkDate.toISOString().split('T')[0];
+                if (calendarData[checkKey] && calendarData[checkKey].modes.gym) {
+                    consecutiveGym++;
+                }
+            }
+            if (consecutiveGym >= 5) {
+                alerts.push({
+                    type: 'warning',
+                    text: '⚠️ Has marcado gym 5+ días seguidos. Considera descanso activo o reducir volumen día 4'
+                });
+            }
+
+            // Modo Secreto + Gym día anterior
+            if (dayData.modes.secreto) {
+                const prevDay = new Date(date);
+                prevDay.setDate(date.getDate() - 1);
+                const prevKey = prevDay.toISOString().split('T')[0];
+                if (calendarData[prevKey] && calendarData[prevKey].modes.gym) {
+                    alerts.push({
+                        type: 'warning',
+                        text: '⚠️ Gym día antes Modo Secreto. Reduce volumen 50% o cambia a cardio LISS'
+                    });
+                }
+
+                // Pierna 48h antes
+                const prev2Day = new Date(date);
+                prev2Day.setDate(date.getDate() - 2);
+                const prev2Key = prev2Day.toISOString().split('T')[0];
+                if (calendarData[prev2Key] && (calendarData[prev2Key].routine === 'piernaA' || calendarData[prev2Key].routine === 'piernaB')) {
+                    alerts.push({
+                        type: 'warning',
+                        text: '⚠️ Evita pierna pesado 48h antes Día D. Afecta recuperación y energía'
+                    });
+                }
+            }
+
+            // Modo Panza Cero
+            if (dayData.modes.panza) {
+                alerts.push({
+                    type: 'info',
+                    text: '💡 Modo Panza Cero: Déficit 400-600 kcal. Hidratación 4-5L/día obligatorio'
+                });
+            }
+
+            // Múltiples modos
+            const activeModes = Object.keys(dayData.modes).filter(m => dayData.modes[m]).length;
+            if (activeModes > 2) {
+                alerts.push({
+                    type: 'info',
+                    text: '💡 Múltiples modos activos: Verifica stack completo para evitar duplicados'
+                });
+            }
+
+            if (alerts.length === 0) return '';
+
+            let html = '<div class="section-title">⚠️ Alertas y Consejos</div>';
+            alerts.forEach(alert => {
+                html += `<div class="alert-box alert-${alert.type}">${alert.text}</div>`;
+            });
+
+            return html;
+        }
+
+        // Generar timeline
+        function generateTimeline(dayData, isWeekend) {
+            const wakeTime = document.getElementById('wakeTime').value;
+            let timeline = [];
+
+            // Stack base
+            timeline.push({
+                time: '07:00',
+                icon: '🌅',
+                title: 'DESPERTAR',
+                items: ['Agua 500ml']
+            });
+
+            timeline.push({
+                time: '07:15',
+                icon: '☕',
+                title: 'PRE-DESAYUNO',
+                items: ['Café negro 200mg', 'L-Teanina 400mg', 'ALCAR 1g']
+            });
+
+            timeline.push({
+                time: '07:45',
+                icon: '💊',
+                title: '15 MIN ANTES DESAYUNO',
+                items: ['Berberina 500mg', 'Agua 300ml']
+            });
+
+            let breakfastSupps = [
+                'Omega-3: 2 softgels (3000mg EPA+DHA)',
+                'B12: 1000mcg',
+                'Hidroxil B-complex',
+                'Vit D3: 4000 UI + K2: 100mcg',
+                'CoQ10: 100-200mg',
+                'NAC: 600mg (2 cápsulas 300mg)'
+            ];
+
+            // Añadir suplementos Modo Focus
+            if (dayData.modes.focus) {
+                breakfastSupps.push('Bacopa Monnieri: 300mg');
+                breakfastSupps.push('Lion\'s Mane: 500-1000mg');
+                breakfastSupps.push('CDP-Colina: 250mg');
+                breakfastSupps.push('Ashwagandha KSM-66: 1 cápsula (600mg)');
+            }
+
+            // Añadir suplementos Modo Secreto según día
+            if (dayData.modes.secreto) {
+                if (dayData.secretoDay !== undefined) {
+                    if (dayData.secretoDay >= -8 && dayData.secretoDay <= -4) {
+                        breakfastSupps.push('Zinc 50mg');
+                        breakfastSupps.push('L-Citrulina 3g');
+                        breakfastSupps.push('Vit C 1g');
+                    } else if (dayData.secretoDay >= -5 && dayData.secretoDay <= -1) {
+                        breakfastSupps.push('Maca roja 3g');
+                        if (dayData.secretoDay >= -4) breakfastSupps.push('Lecitina 2400mg');
+                        if (dayData.secretoDay >= -3) breakfastSupps.push('L-Citrulina 6g (duplicado)');
+                    } else if (dayData.secretoDay === 0) {
+                        breakfastSupps.push('Lecitina 2400mg');
+                        breakfastSupps.push('Zinc 30mg EXTRA');
+                        breakfastSupps.push('L-Citrulina 6g + L-Arginina 3g + Taurina 2g + Vit C 1g');
+                        breakfastSupps.push('Tadalafilo (dosis prescrita)');
+                    }
+                }
+            }
+
+            timeline.push({
+                time: '08:00',
+                icon: '🍳',
+                title: 'DESAYUNO',
+                items: [
+                    '<strong>Comida:</strong> 3 huevos + 50-60g avena + plátano + naranja + 10 nueces',
+                    '<strong>Suplementos:</strong>',
+                    ...breakfastSupps
+                ]
+            });
+
+            // Modo Secreto Día D - Refuerzo 09:30
+            if (dayData.modes.secreto && dayData.secretoDay === 0) {
+                timeline.push({
+                    time: '09:30',
+                    icon: '🔴',
+                    title: 'REFUERZO DÍA D',
+                    items: ['L-Citrulina 3g', 'L-Arginina 2g', 'Taurina 1g']
+                });
+            }
+
+            timeline.push({
+                time: '13:45',
+                icon: '💊',
+                title: 'PRE-COMIDA',
+                items: ['Berberina 500mg', 'Agua 300ml']
+            });
+
+            timeline.push({
+                time: '14:00',
+                icon: '🍽️',
+                title: 'COMIDA',
+                items: ['200g proteína + carbos + verduras']
+            });
+
+            // Gym
+            if (dayData.modes.gym) {
+                const gymTime = isWeekend ? document.getElementById('gymWeekend').value : document.getElementById('gymWeekday').value;
+                const gymHour = parseInt(gymTime.split(':')[0]);
+                const gymMinute = parseInt(gymTime.split(':')[1]);
+
+                const preGymHour = gymMinute >= 30 ? gymHour : gymHour - 1;
+                const preGymMinute = gymMinute >= 30 ? gymMinute - 30 : gymMinute + 30;
+                const preGymTime = `${String(preGymHour).padStart(2, '0')}:${String(preGymMinute).padStart(2, '0')}`;
+
+                timeline.push({
+                    time: preGymTime,
+                    icon: '💪',
+                    title: 'PRE-GYM (30 min antes)',
+                    items: [
+                        'L-Citrulina: 6-8g',
+                        'Beta-alanina: 3-4g',
+                        'Cafeína: 200mg (si no tomó café tarde)',
+                        'Taurina: 2g',
+                        'Agua: 500ml'
+                    ]
+                });
+
+                timeline.push({
+                    time: gymTime,
+                    icon: '🏋️',
+                    title: 'GYM - ' + (GYM_ROUTINES[dayData.routine]?.name || 'Seleccionar rutina'),
+                    items: ['Ver sección de rutina abajo']
+                });
+
+                const postGymHour = gymHour + 1;
+                const postGymTime = `${String(postGymHour).padStart(2, '0')}:${String(gymMinute).padStart(2, '0')}`;
+
+                timeline.push({
+                    time: postGymTime,
+                    icon: '🥤',
+                    title: 'POST-GYM',
+                    items: ['Proteína Whey: 30g', 'Agua: 500ml']
+                });
+            }
+
+            timeline.push({
+                time: '19:45',
+                icon: '💊',
+                title: 'PRE-CENA',
+                items: ['Berberina 500mg', 'Agua 300ml']
+            });
+
+            timeline.push({
+                time: '20:00',
+                icon: '🍽️',
+                title: 'CENA',
+                items: [
+                    '<strong>Comida:</strong> 200g proteína + verduras + carbohidrato opcional',
+                    '<strong>Suplementos:</strong>',
+                    'Omega-3: 1 softgel (1500mg EPA+DHA)',
+                    'B12: 1000mcg'
+                ]
+            });
+
+            let nightSupps = [
+                'Glicina: 5g',
+                'Magnesio quelado: 400-500mg (3-4 cápsulas)',
+                'Zinc: 30mg (días alternos)',
+                'Colágeno: 10g (opcional)',
+                'Atorvastatina: 40mg',
+                'Agua 400ml'
+            ];
+
+            if (dayData.modes.focus) {
+                nightSupps.push('Ashwagandha KSM-66: 1 cápsula (600mg)');
+            }
+
+            if (dayData.modes.secreto && dayData.secretoDay !== undefined && dayData.secretoDay >= -8 && dayData.secretoDay <= -1) {
+                nightSupps.push('Zinc 50mg (días alternos)');
+                nightSupps.push('L-Citrulina 3g');
+                if (dayData.secretoDay >= -3) nightSupps.push('L-Citrulina 6g EXTRA (noche)');
+            }
+
+            timeline.push({
+                time: '22:30',
+                icon: '🌙',
+                title: 'PRE-DORMIR',
+                items: nightSupps
+            });
+
+            // Generar HTML
+            let html = '';
+            timeline.forEach(item => {
+                html += `
+                    <div class="timeline-item">
+                        <div class="timeline-time">${item.icon} ${item.time}</div>
+                        <div class="timeline-content">
+                            <h4>${item.title}</h4>
+                            <ul>
+                                ${item.items.map(i => `<li>${i}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            });
+
+            return html;
+        }
+
+        // Generar sección Gym
+        function generateGymSection(dayKey, dayData) {
+            let html = '<div class="section-title">🏋️ Rutina de Gym</div>';
+            html += '<div class="routine-selector">';
+            html += '<select id="routineSelect" onchange="selectRoutine(\'' + dayKey + '\')">';
+            html += '<option value="">-- Seleccionar Rutina --</option>';
+
+            Object.keys(GYM_ROUTINES).forEach(key => {
+                const selected = dayData.routine === key ? 'selected' : '';
+                html += `<option value="${key}" ${selected}>${GYM_ROUTINES[key].name}</option>`;
+            });
+
+            html += '</select>';
+
+            if (dayData.routine && GYM_ROUTINES[dayData.routine]) {
+                const routine = GYM_ROUTINES[dayData.routine];
+                html += '<div class="routine-details">';
+                html += `<h4>${routine.name}</h4>`;
+                html += `<p><strong>Duración estimada:</strong> ${routine.duration}</p>`;
+
+                routine.exercises.forEach(ex => {
+                    html += '<div class="exercise-item">';
+                    html += `<div class="exercise-name">${ex.name}</div>`;
+                    html += `<div class="exercise-details">${ex.details}</div>`;
+                    if (ex.warning) {
+                        html += `<div class="alert-box alert-warning" style="margin-top: 5px; padding: 8px;">${ex.warning}</div>`;
+                    }
+                    html += '</div>';
+                });
+
+                html += '</div>';
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        // Seleccionar rutina
+        function selectRoutine(dayKey) {
+            const select = document.getElementById('routineSelect');
+            calendarData[dayKey].routine = select.value;
+            viewDayPlan(dayKey, 'Actualizar');
+        }
+
+        // Abrir modal de notas
+        function openNotes(dayKey, dateStr) {
+            currentDayKey = dayKey;
+            document.getElementById('notesModalTitle').textContent = `📝 Notas - ${dateStr}`;
+            document.getElementById('notesTextarea').value = calendarData[dayKey].notes || '';
+            document.getElementById('notesModal').style.display = 'block';
+        }
+
+        // Guardar notas
+        function saveNotes() {
+            const notes = document.getElementById('notesTextarea').value;
+            calendarData[currentDayKey].notes = notes;
+            closeModal('notesModal');
+            showSaveMessage();
+        }
+
+        // Guardar plan del día
+        function saveDayPlan() {
+            const notes = document.getElementById('dayNotes');
+            if (notes) {
+                calendarData[currentDayKey].notes = notes.value;
+            }
+            showSaveMessage();
+        }
+
+        // Cerrar modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Guardar todo
+        function saveAll() {
+            const config = {
+                wakeTime: document.getElementById('wakeTime').value,
+                gymWeekday: document.getElementById('gymWeekday').value,
+                gymWeekend: document.getElementById('gymWeekend').value,
+                startDate: currentDate.toISOString(),
+                calendarData: calendarData
+            };
+
+            localStorage.setItem('modoVikingData', JSON.stringify(config));
+            showSaveMessage();
+        }
+
+        // Cargar desde LocalStorage
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('modoVikingData');
+            if (saved) {
+                const config = JSON.parse(saved);
+                document.getElementById('wakeTime').value = config.wakeTime || '08:00';
+                document.getElementById('gymWeekday').value = config.gymWeekday || '17:30';
+                document.getElementById('gymWeekend').value = config.gymWeekend || '10:00';
+
+                if (config.startDate) {
+                    currentDate = new Date(config.startDate);
+                }
+
+                if (config.calendarData) {
+                    calendarData = config.calendarData;
+                }
+            }
+        }
+
+        // Resetear todo
+        function resetAll() {
+            if (confirm('⚠️ ¿Estás seguro de resetear TODO?\n\nSe perderán todos los datos guardados.')) {
+                localStorage.removeItem('modoVikingData');
+                location.reload();
+            }
+        }
+
+        // Mostrar mensaje de guardado
+        function showSaveMessage() {
+            const msg = document.getElementById('saveMessage');
+            msg.style.display = 'block';
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        }
+
+        // Imprimir día
+        function printDay() {
+            window.print();
+        }
+
+        // Generar PDF
+        function generatePDF() {
+            // Generar contenido completo
+            let pdfContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>MODO VIKING - Plan Completo</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        h1 { text-align: center; color: #2c3e50; }
+                        .week { margin: 30px 0; page-break-after: always; }
+                        .day { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+                        .day-header { font-weight: bold; font-size: 1.2em; margin-bottom: 10px; }
+                        .timeline { margin: 10px 0; }
+                        .timeline-item { margin: 10px 0; padding: 10px; background: #f8f9fa; }
+                        .modes { margin: 10px 0; }
+                        .mode-badge { display: inline-block; padding: 5px 10px; margin: 3px; background: #3498db; color: white; border-radius: 5px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>⚔️ MODO VIKING - PLAN COMPLETO ⚔️</h1>
+                    <h2 style="text-align: center;">Planificador Integral de 3 Semanas</h2>
+            `;
+
+            const startDate = new Date(currentDate);
+
+            for (let week = 0; week < 3; week++) {
+                pdfContent += `<div class="week"><h2>SEMANA ${week + 1}</h2>`;
+
+                for (let day = 0; day < 7; day++) {
+                    const currentDay = new Date(startDate);
+                    currentDay.setDate(startDate.getDate() + (week * 7) + day);
+                    const dayKey = currentDay.toISOString().split('T')[0];
+                    const dayData = calendarData[dayKey];
+
+                    if (!dayData) continue;
+
+                    const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+                    const dayName = days[currentDay.getDay()];
+                    const dateStr = currentDay.toLocaleDateString('es-ES');
+
+                    pdfContent += `<div class="day">`;
+                    pdfContent += `<div class="day-header">${dayName} ${dateStr}</div>`;
+
+                    // Modos activos
+                    const activeModes = Object.keys(dayData.modes).filter(m => dayData.modes[m]);
+                    if (activeModes.length > 0) {
+                        pdfContent += '<div class="modes"><strong>Modos activos:</strong> ';
+                        activeModes.forEach(mode => {
+                            pdfContent += `<span class="mode-badge">${MODES[mode].icon} ${MODES[mode].name}</span>`;
+                        });
+                        pdfContent += '</div>';
+                    }
+
+                    // Rutina
+                    if (dayData.routine && GYM_ROUTINES[dayData.routine]) {
+                        pdfContent += `<div><strong>Rutina Gym:</strong> ${GYM_ROUTINES[dayData.routine].name}</div>`;
+                    }
+
+                    // Notas
+                    if (dayData.notes) {
+                        pdfContent += `<div><strong>Notas:</strong> ${dayData.notes}</div>`;
+                    }
+
+                    pdfContent += `</div>`;
+                }
+
+                pdfContent += `</div>`;
+            }
+
+            pdfContent += '</body></html>';
+
+            // Abrir en nueva ventana para imprimir
+            const printWindow = window.open('', '', 'width=800,height=600');
+            printWindow.document.write(pdfContent);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => {
+                printWindow.print();
+            }, 250);
+        }
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const planModal = document.getElementById('planModal');
+            const notesModal = document.getElementById('notesModal');
+
+            if (event.target == planModal) {
+                planModal.style.display = 'none';
+            }
+            if (event.target == notesModal) {
+                notesModal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
